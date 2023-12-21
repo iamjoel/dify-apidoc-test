@@ -32,7 +32,14 @@
 /* doc end */
 
 /* tailwind start */
-@tailwind base;
+/* not include tailwind reset css */
+/* @tailwind base; */
+button {
+  cursor: pointer;
+  outline: none;
+  border: none;
+  -webkit-appearance: button;
+}
 /* tailwind 里的一些变量定义 */
 *, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -128,13 +135,20 @@
   --tw-backdrop-sepia:  ;
 }
 
+
+
+/* API doc start */
 @tailwind components;
 @tailwind utilities;
 svg {
   display: unset;
 }
 
-/* API doc start */
+/* fix doc header render twice */
+header h1 {
+  display: none;
+}
+
 pre {
   background: none;
 }

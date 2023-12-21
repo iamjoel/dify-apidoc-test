@@ -42,7 +42,7 @@ const config = {
         docs: {
           path: 'docs',
           breadcrumbs: true,
-          routeBasePath: 'docs',
+          routeBasePath: '/', // Serve the docs at the site's root
           include: ['**/*.md', '**/*.mdx'],
           exclude: [
             '**/_*.{js,jsx,ts,tsx,md,mdx}',
@@ -52,6 +52,7 @@ const config = {
           ],
           sidebarPath: './sidebars.js',
         },
+        blog: false,
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -71,19 +72,13 @@ const config = {
           src: 'img/logo.svg',
         },
         items: [
-          {
-            type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
-            position: 'left',
-            label: 'API',
-          },
           // i18n dropdown
           {
             type: 'localeDropdown',
             position: 'right',
           },
           {
-            href: 'https://github.com/langgenius/docusaurus',
+            href: 'https://github.com/langgenius/dify',
             label: 'GitHub',
             position: 'right',
           },
@@ -94,29 +89,11 @@ const config = {
         style: 'dark',
         links: [
           {
-            title: 'Docs',
-            items: [
-              {
-                label: 'Tutorial',
-                to: '/docs/intro',
-              },
-            ],
-          },
-          {
             title: 'Community',
             items: [
               {
                 label: 'Discord',
                 href: 'https://discord.gg/FngNHpbcY7',
-              },
-            ],
-          },
-          {
-            title: 'More',
-            items: [
-              {
-                label: 'GitHub',
-                href: 'https://github.com/langgenius/dify',
               },
             ],
           },
