@@ -11,7 +11,7 @@ import {
 import { Tab } from '@headlessui/react'
 import classNames from 'classnames'
 
-import { Tag } from './tag.tsx'
+import { Tag } from './tag'
 
 const languageNames = {
   js: 'JavaScript',
