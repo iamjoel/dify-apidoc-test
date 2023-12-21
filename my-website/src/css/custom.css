@@ -130,6 +130,9 @@
 
 @tailwind components;
 @tailwind utilities;
+svg {
+  display: unset;
+}
 
 /* API doc start */
 pre {

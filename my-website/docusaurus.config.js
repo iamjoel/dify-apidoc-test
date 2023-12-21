@@ -20,8 +20,8 @@ const config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  organizationName: 'langgenius', // Usually your GitHub org/user name.
+  projectName: 'dify', // Usually your repo name.
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -67,7 +67,7 @@ const config = {
       navbar: {
         title: 'Dify',
         logo: {
-          alt: 'My Site Logo',
+          alt: 'Dify Logo',
           src: 'img/logo.svg',
         },
         items: [
@@ -75,15 +75,15 @@ const config = {
             type: 'docSidebar',
             sidebarId: 'tutorialSidebar',
             position: 'left',
-            label: 'Tutorial',
+            label: 'API',
           },
-          {to: '/blog', label: 'Blog', position: 'left'},
           // i18n dropdown
           {
             type: 'localeDropdown',
+            position: 'right',
           },
           {
-            href: 'https://github.com/facebook/docusaurus',
+            href: 'https://github.com/langgenius/docusaurus',
             label: 'GitHub',
             position: 'right',
           },
@@ -106,16 +106,8 @@ const config = {
             title: 'Community',
             items: [
               {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-              },
-              {
                 label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
-              },
-              {
-                label: 'Twitter',
-                href: 'https://twitter.com/docusaurus',
+                href: 'https://discord.gg/FngNHpbcY7',
               },
             ],
           },
@@ -123,17 +115,13 @@ const config = {
             title: 'More',
             items: [
               {
-                label: 'Blog',
-                to: '/blog',
-              },
-              {
                 label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
+                href: 'https://github.com/langgenius/dify',
               },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} LangGenius, Inc. Built with Docusaurus.`,
       },
       prism: {
         theme: prismThemes.github,
