@@ -69,7 +69,7 @@ const config = {
         title: 'Dify',
         logo: {
           alt: 'Dify Logo',
-          src: 'img/logo.svg',
+          src: 'img/logo.png',
         },
         items: [
           // i18n dropdown
