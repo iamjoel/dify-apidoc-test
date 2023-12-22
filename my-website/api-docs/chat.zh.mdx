@@ -1,18 +1,18 @@
-import { CodeGroup } from '../code.tsx'
-import { Row, Col, Properties, Property, Heading, SubProperty, Paragraph } from '../md.tsx'
+import { CodeGroup } from './components'
+import { Row, Col, Properties, Property, Heading, SubProperty } from './components'
 
-# Chat App API
+# 对话型应用 API
 
-For versatile conversational apps using a Q&A format, call the chat-messages API to initiate dialogue. Maintain ongoing conversations by passing the returned conversation_id. Response parameters and templates depend on LangGenius Prompt Eng. settings. **[Before you start, READ This !! What is a Bearer Token](https://swagger.io/docs/specification/authentication/bearer-authentication/)**
+可用于大部分场景的对话型应用，采用一问一答模式与用户持续对话。要开始一个对话请调用 chat-messages 接口，通过继续传入返回的 conversation_id 可持续保持该会话。**[开始前请阅读 !! 什么是 Bearer Token ？](https://swagger.io/docs/specification/authentication/bearer-authentication/)**
 
 <div>
-  ### Authentication
+  ### 鉴权
 
-  Service API of Dify authenticates using an `API-Key`.
+  Dify Service API 使用 `API-Key` 进行鉴权。
 
-  It is suggested that developers store the `API-Key` in the backend instead of sharing or storing it in the client side to avoid the leakage of the `API-Key`, which may lead to property loss.
+  建议开发者把 `API-Key` 放在后端存储，而非分享或者放在客户端存储，以免 `API-Key` 泄露，导致财产损失。
 
-  All API requests should include your `API-Key` in the **`Authorization`** HTTP Header, as shown below:
+  所有 API 请求都应在 **`Authorization`** HTTP Header 中包含您的 `API-Key`，如下所示：
 
   <CodeGroup title="Code">
     ```javascript
@@ -27,18 +27,18 @@ For versatile conversational apps using a Q&A format, call the chat-messages API
 <Heading
   url='/chat-messages'
   method='POST'
-  title='Create chat message'
+  title='发送对话消息'
   name='#Create-Chat-Message'
 />
 <Row>
   <Col>
-    Create a new conversation message or continue an existing dialogue.
+    创建会话消息，或基于此前的对话继续发送消息。
 
     ### Request Body
 
     <Properties>
       <Property name='inputs' type='object' key='inputs'>
-        (Optional) Provide user input fields as key-value pairs, corresponding to variables in Prompt Eng. Key is the variable name, Value is the parameter value. If the field type is Select, the submitted Value must be one of the preset choices.
+        （选填）以键值对方式提供用户输入字段，与提示词编排中的变量对应。Key 为变量名称，Value 是参数值。如果字段类型为 Select，传入的 Value 需为预设选项之一。
         <ul>
          {!!props.variables.length && props.variables.map(
             val => (
@@ -50,26 +50,26 @@ For versatile conversational apps using a Q&A format, call the chat-messages API
         </ul>
       </Property>
       <Property name='query' type='string' key='query'>
-        User input/question content
+        用户输入/提问内容
       </Property>
       <Property name='response_mode' type='string' key='response_mode'>
-        - Blocking type, waiting for execution to complete and returning results. (Requests may be interrupted if the process is long)
-        - streaming returns. Implementation of streaming return based on SSE （**[Server-Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)**）.
+        - blocking 阻塞型，等待执行完毕后返回结果。（请求若流程较长可能会被中断）
+        - streaming 流式返回。基于 SSE（**[Server-Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)**）实现流式返回。
       </Property>
       <Property name='conversation_id' type='string' key='conversation_id'>
-       (Required) Conversation ID: <strong>‼️ leave it empty for first-time (eg. conversation_id: "") conversation ‼️</strong>; pass conversation_id from context to continue dialogue.
+      （必填）<strong>‼️ 会话标识符，首次对话为 conversation_id: "" ‼️</strong>，如果要继续对话请传入上下文返回的 conversation_id
       </Property>
       <Property name='user' type='string' key='user'>
-        The user identifier, defined by the developer, must ensure uniqueness within the app.
+        用户标识，由开发者定义规则，需保证用户标识在应用内唯一。
       </Property>
       <Property name='files' type='array[object]' key='files'>
-          Uploaded files.
-          - `type` file type: currently only `image` is supported.
-          - `transfer_method` transfer method:
-            - `remote_url`: Image address.
-            - `local_file`: upload file.
-          - `upload_file_id` Upload file ID. Required when `transfer_method` is `local_file`.
-           - `url` image address. Required when `transfer_method` is `remote_url`.
+          上传的文件。
+          - `type` 文件类型:目前仅支持 `image`。
+          - `transfer_method` 传递方式:
+            - `remote_url`: 图片地址。
+            - `local_file`: 上传文件。
+          - `upload_file_id` 上传文件 ID。`transfer_method` 为 `local_file` 时必填。
+          - `url` 图片地址。`transfer_method` 为 `remote_url` 时必填。
       </Property>
     </Properties>
   </Col>
@@ -85,7 +85,7 @@ For versatile conversational apps using a Q&A format, call the chat-messages API
         "inputs": {},
         "query": "eh",
         "response_mode": "streaming",
-        "conversation_id": "1c7e55fb-1ba2-4e10-81b5-30addcea2276",
+        "conversation_id": "",
         "user": "abc-123"
     }'
     ```
@@ -117,17 +117,17 @@ For versatile conversational apps using a Q&A format, call the chat-messages API
 <Heading
   url='/messages/{message_id}/feedbacks'
   method='POST'
-  title='Message terminal user feedback, like'
+  title='消息反馈（点赞）'
   name='#feedbacks'
 />
 <Row>
   <Col>
-    Rate received messages on behalf of end-users with likes or dislikes. This data is visible in the Logs & Annotations page and used for future model fine-tuning.
+    代表最终用户对返回消息进行评价，可以点赞与点踩，该数据将在“日志与标注”页中可见，并用于后续的模型微调。
 
     ### Path Params
     <Properties>
       <Property name='message_id' type='string' key='message_id'>
-       Message ID
+       消息 ID
       </Property>
     </Properties>
 
@@ -135,16 +135,16 @@ For versatile conversational apps using a Q&A format, call the chat-messages API
 
     <Properties>
       <Property name='rating' type='string' key='rating'>
-       like or dislike, null is undo
+       like 或 dislike， 空值为撤销
       </Property>
       <Property name='user' type='string' key='user'>
-        The user identifier, defined by the developer, must ensure uniqueness within the app.
+        用户标识，由开发者定义规则，需保证用户标识在应用内唯一。
       </Property>
     </Properties>
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="POST" label="/messages/{message_id}/feedbacks" targetCode={`curl --location --request POST '${props.appDetail.api_base_url}/messages/{message_id}/feedbacks \\\n --header 'Authorization: Bearer ENTER-YOUR-SECRET-KEY' \\\n--header 'Content-Type: application/json' \\\n--data-raw '{\n    "rating": "like",\n    "user": "abc-123"\n}'`}>
+    <CodeGroup title="Request" tag="POST" label="/messages/{message_id}/feedbacks" targetCode={`curl --location --request POST '${props.appDetail.api_base_url}/messages/{message_id}/feedbacks \\\n--header 'Authorization: Bearer ENTER-YOUR-SECRET-KEY' \\\n--header 'Content-Type: application/json' \\\n--data-raw '{\n    "rating": "like",\n    "user": "abc-123"\n}'`}>
 
     ```bash {{ title: 'cURL' }}
     curl --location --request POST '${props.appDetail.api_base_url}/messages/{message_id}/feedbacks' \
@@ -154,119 +154,6 @@ For versatile conversational apps using a Q&A format, call the chat-messages API
         "rating": "like",
         "user": "abc-123"
     }'
-    ```
-
-    </CodeGroup>
-
-    <CodeGroup title="Response">
-    ```json {{ title: 'Response' }}
-    {
-      "has_more": false,
-      "data": [
-        {
-          "id": "WAz8eIbvDR60rouK",
-          "conversation_id": "xgQQXg3hrtjh7AvZ",
-          "inputs": {},
-          "query": "...",
-          "answer": "...",
-          "feedback": "like",
-          "created_at": 692233200
-        },
-        {
-          "id": "hSIhXBhNe8X1d8Et"
-          // ...
-        }
-      ]
-    }
-    ```
-    </CodeGroup>
-  </Col>
-</Row>
-
----
-
-<Heading
-  url='/messages/{message_id}/suggested'
-  method='GET'
-  title='next suggested questions'
-  name='#suggested'
-/>
-<Row>
-  <Col>
-    Get next questions suggestions for the current message
-
-    ### Path Params
-
-    <Properties>
-      <Property name='message_id' type='string' key='message_id'>
-        Message ID
-      </Property>
-    </Properties>
-  </Col>
-  <Col sticky>
-
-    <CodeGroup title="Request" tag="GET" label="/messages/{message_id}/suggested" targetCode={`curl --location --request GET '${props.appDetail.api_base_url}/messages/{message_id}/suggested \\\n--header 'Authorization: Bearer ENTER-YOUR-SECRET-KEY' \\\n--header 'Content-Type: application/json'`}>
-
-    ```bash {{ title: 'cURL' }}
-    curl --location --request GET '${props.appDetail.api_base_url}/messages/{message_id}/suggested' \
-    --header 'Authorization: Bearer ENTER-YOUR-SECRET-KEY' \
-    --header 'Content-Type: application/json' \
-    ```
-
-    </CodeGroup>
-
-    <CodeGroup title="Response">
-    ```json {{ title: 'Response' }}
-    {
-      "result": "success",
-      "data": [
-            "a",
-            "b",
-            "c"
-        ]
-      ]
-    }
-    ```
-    </CodeGroup>
-  </Col>
-</Row>
-
----
-
-<Heading
-  url='/messages'
-  method='GET'
-  title='Get the chat history message'
-  name='#messages'
-/>
-<Row>
-  <Col>
-    The first page returns the latest `limit` bar, which is in reverse order. Load previous pages by passing the `first_id` of the last message on the current page to the `first_id` parameter of the next request.
-
-    ### Query
-
-    <Properties>
-      <Property name='conversation_id' type='string' key='conversation_id'>
-        Conversation ID
-      </Property>
-      <Property name='first_id' type='string' key='first_id'>
-        ID of the first chat record on the current page. The default is none.
-      </Property>
-      <Property name='limit' type='int' key='limit'>
-        How many chats are returned in one request
-      </Property>
-      <Property name='user' type='string' key='user'>
-        The user identifier, defined by the developer, must ensure uniqueness within the app.
-      </Property>
-    </Properties>
-  </Col>
-  <Col sticky>
-
-    <CodeGroup title="Request" tag="GET" label="/messages" targetCode={`curl --location --request GET '${props.appDetail.api_base_url}/messages?user=abc-123&conversation_id='\\\n --header 'Authorization: Bearer ENTER-YOUR-SECRET-KEY'`}>
-
-    ```bash {{ title: 'cURL' }}
-    curl --location --request GET '${props.appDetail.api_base_url}/messages?user=abc-123&conversation_id='
-    --header 'Authorization: Bearer ENTER-YOUR-SECRET-KEY'
     ```
 
     </CodeGroup>
@@ -299,32 +186,145 @@ For versatile conversational apps using a Q&A format, call the chat-messages API
 ---
 
 <Heading
-  url='/conversations'
+  url='/messages/{message_id}/suggested'
   method='GET'
-  title='Get conversation list'
-  name='#conversations'
+  title='消息下一步问题建议'
+  name='#suggested'
 />
 <Row>
   <Col>
-    Gets the session list of the current user. By default, the last 20 sessions are returned.
+    获取针对当前问题的下一步问题建议
 
-    ### Query
+    ### Path Params
 
     <Properties>
-      <Property name='last_id' type='string' key='last_id'>
-        The ID of the last record on the current page, default none.
-      </Property>
-      <Property name='limit' type='int' key='limit'>
-        "How many chats are returned in one request
-      </Property>
-      <Property name='user' type='string' key='user'>
-        The user identifier, defined by the developer, must ensure uniqueness within the app.
+      <Property name='message_id' type='string' key='message_id'>
+        消息 ID
       </Property>
     </Properties>
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="GET" label="/conversations" targetCode={`curl --location --request GET '${props.appDetail.api_base_url}/conversations?user=abc-123&last_id=&limit=20'`}>
+    <CodeGroup title="Request" tag="GET" label="/messages/{message_id}/suggested" targetCode={`curl --location --request GET '${props.appDetail.api_base_url}/messages/{message_id}/suggested' \\\n--header 'Authorization: Bearer ENTER-YOUR-SECRET-KEY' \\\n--header 'Content-Type: application/json'`}>
+
+    ```bash {{ title: 'cURL' }}
+    curl --location --request GET '${props.appDetail.api_base_url}/messages/{message_id}/suggested' \
+    --header 'Authorization: Bearer ENTER-YOUR-SECRET-KEY' \
+    --header 'Content-Type: application/json' \
+    ```
+
+    </CodeGroup>
+
+    <CodeGroup title="Response">
+    ```json {{ title: 'Response' }}
+    {
+      "result": "success",
+      "data": [
+            "a",
+            "b",
+            "c"
+        ]
+      ]
+    }
+    ```
+    </CodeGroup>
+  </Col>
+</Row>
+
+---
+
+<Heading
+  url='/messages'
+  method='GET'
+  title='获取会话历史消息'
+  name='#messages'
+/>
+<Row>
+  <Col>
+    滚动加载形式返回历史聊天记录，第一页返回最新 `limit` 条，加载更多时，返回 `first_id` 之前的 `limit` 条。
+
+    ### Query
+
+    <Properties>
+      <Property name='conversation_id' type='string' key='conversation_id'>
+        会话 ID
+      </Property>
+      <Property name='first_id' type='string' key='first_id'>
+        当前页第一条聊天记录的 ID，默认 none
+      </Property>
+      <Property name='limit' type='int' key='limit'>
+        一次请求返回多少条聊天记录
+      </Property>
+      <Property name='user' type='string' key='user'>
+        用户标识，由开发者定义规则，需保证用户标识在应用内唯一。
+      </Property>
+    </Properties>
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/messages" targetCode={`curl --location --request GET '${props.appDetail.api_base_url}/messages?user=abc-123&conversation_id=' \\\n--header 'Authorization: Bearer ENTER-YOUR-SECRET-KEY'`}>
+
+    ```bash {{ title: 'cURL' }}
+    curl --location --request GET '${props.appDetail.api_base_url}/messages?user=abc-123&conversation_id='
+    --header 'Authorization: Bearer ENTER-YOUR-SECRET-KEY'
+    ```
+
+    </CodeGroup>
+
+    <CodeGroup title="Response">
+    ```json {{ title: 'Response' }}
+    {
+      "has_more": false,
+      "data": [
+        {
+          "id": "WAz8eIbvDR60rouK",
+          "conversation_id": "xgQQXg3hrtjh7AvZ",
+          "inputs": {},
+          "query": "...",
+          "answer": "...",
+          "feedback": "like",
+          "created_at": 692233200
+        },
+        {
+          "id": "hSIhXBhNe8X1d8Et"
+          // ...
+        }
+      ]
+    }
+    ```
+    </CodeGroup>
+  </Col>
+</Row>
+
+---
+
+<Heading
+  url='/conversations'
+  method='GET'
+  title='获取会话列表'
+  name='#conversations'
+/>
+<Row>
+  <Col>
+    获取当前用户的会话列表，默认返回最近的 20 条。
+
+    ### Query
+
+    <Properties>
+      <Property name='last_id' type='string' key='last_id'>
+        当前页最后面一条记录的 ID，默认 none
+      </Property>
+      <Property name='limit' type='int' key='limit'>
+        一次请求返回多少条记录
+      </Property>
+      <Property name='user' type='string' key='user'>
+        用户标识，由开发者定义规则，需保证用户标识在应用内唯一。
+      </Property>
+    </Properties>
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/conversations" targetCode={`curl --location --request GET '${props.appDetail.api_base_url}/conversations?user=abc-123&last_id=&limit=20'\\\n--header 'Authorization: Bearer ENTER-YOUR-SECRET-KEY'`}>
 
     ```bash {{ title: 'cURL' }}
     curl --location --request GET '${props.appDetail.api_base_url}/conversations?user=abc-123&last_id=&limit=20' \
@@ -365,21 +365,21 @@ For versatile conversational apps using a Q&A format, call the chat-messages API
 <Heading
   url='/conversations/{conversation_id}/name'
   method='POST'
-  title='Conversation renaming'
+  title='会话重命名'
   name='#rename'
 />
 <Row>
   <Col>
-    Rename conversations; the name is displayed in multi-session client interfaces.
+    对会话进行重命名，会话名称用于显示在支持多会话的客户端上。
 
     ### Request Body
 
     <Properties>
       <Property name='name' type='string' key='name'>
-        New name
+        新的名称
       </Property>
       <Property name='user' type='string' key='user'>
-        The user identifier, defined by the developer, must ensure uniqueness within the app.
+        用户标识，由开发者定义规则，需保证用户标识在应用内唯一。
       </Property>
     </Properties>
   </Col>
@@ -389,8 +389,8 @@ For versatile conversational apps using a Q&A format, call the chat-messages API
 
     ```bash {{ title: 'cURL' }}
     curl --location --request POST '${props.appDetail.api_base_url}/conversations/{conversation_id}/name' \
-    --header 'Content-Type: application/json' \
     --header 'Authorization: Bearer ENTER-YOUR-SECRET-KEY' \
+    --header 'Content-Type: application/json' \
     --data-raw '{
         "name": "",
         "user": "abc-123"
@@ -409,24 +409,23 @@ For versatile conversational apps using a Q&A format, call the chat-messages API
   </Col>
 </Row>
 
-
 ---
 
 <Heading
   url='/conversations/{conversation_id}'
   method='DELETE'
-  title='Conversation deletion'
+  title='删除会话'
   name='#delete'
 />
 <Row>
   <Col>
-    Delete conversation.
+    删除会话。
 
     ### Request Body
 
     <Properties>
       <Property name='user' type='string' key='user'>
-        The user identifier, defined by the developer, must ensure uniqueness within the app.
+        用户标识，由开发者定义规则，需保证用户标识在应用内唯一。
       </Property>
     </Properties>
   </Col>
@@ -461,21 +460,21 @@ For versatile conversational apps using a Q&A format, call the chat-messages API
 <Heading
   url='/files/upload'
   method='POST'
-  title='Upload files'
+  title='上传文件'
   name='#files-upload'
 />
 <Row>
   <Col>
-    Upload files to the server for text generation and dialogue. Uploaded files are only available to the current end user.
+    上传文件到服务器，供文本生成、对话使用。上传的文件仅供当前终端用户使用。
 
     ### Request Body
-    The request method is `multipart/form-data`
+    请求方式为 `multipart/form-data`。
     <Properties>
       <Property name='file' type='file' key='file'>
-        The file to upload. Currently supports png, jpg, jpeg, webp, gif format files.
+        要上传的文件。目前支持 png, jpg, jpeg, webp, gif 格式文件。
       </Property>
       <Property name='user' type='string' key='user'>
-        User ID, rules are defined by the developer, and it is necessary to ensure that the user ID is unique within the application.
+        用户标识，由开发者定义规则，需保证用户标识在应用内唯一。
       </Property>
     </Properties>
   </Col>
@@ -512,25 +511,25 @@ For versatile conversational apps using a Q&A format, call the chat-messages API
 <Heading
   url='/audio-to-text'
   method='POST'
-  title='speech to text'
+  title='语音转文字'
   name='#audio'
 />
 <Row>
   <Col>
-    Speech to text, only supports openai model.
+    语音转文字，仅支持 openai 模型。
 
     ### Request Body
 
     <Properties>
       <Property name='file' type='file' key='file'>
-        Audio file.
-        File uploads are currently limited to 15 MB and the following input file types are supported: mp3, mp4, mpeg, mpga, m4a, wav, and webm.
+        语音文件。
+        文件上传当前限制为 15 MB，并且支持以下输入文件类型：mp3、mp4、mpeg、mpga、m4a、wav 和 webm。
       </Property>
     </Properties>
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="POST" label="/audio-to-text" targetCode={`curl --location --request POST '${props.appDetail.api_base_url}/audio-to-text' \\\n--header 'Authorization: Bearer ENTER-YOUR-SECRET-KEY' \\\n--form 'file=@localfile;type=audio/[mp3|mp4|mpeg|mpga|m4a|wav|webm]'`}>
+    <CodeGroup title="Request" tag="POST" label="/audio-to-text" targetCode={`curl --location --request POST '${props.appDetail.api_base_url}/audio-to-text' \\\n--header 'Authorization: Bearer ENTER-YOUR-SECRET-KEY' \\\n--form 'file=@localfile;type=audio/[mp3|mp4|mpeg|mpga|m4a|wav|webm]`}>
 
     ```bash {{ title: 'cURL' }}
     curl --location --request POST '${props.appDetail.api_base_url}/conversations/name' \
@@ -555,26 +554,26 @@ For versatile conversational apps using a Q&A format, call the chat-messages API
 <Heading
   url='/parameters'
   method='GET'
-  title='Obtain application parameter information'
+  title='获取应用配置信息'
   name='#rename'
 />
 <Row>
   <Col>
-    Content include:
-    1. Retrieve configured Input parameters, including variable names, field names, types, and default values. Typically used for displaying these fields in a form or filling in default values after the client loads.
-    2. Configuration of uploading images, including whether to enable image uploading, the number of uploaded images and the uploading method. Note: This configuration is only available when using a model that supports multimodality.
+    内容包括：
+    1. 已配置的 Input 参数，包括变量名、字段名称、类型与默认值。通常用于客户端加载后显示这些字段的表单或填入默认值。
+    2. 上传图片的配置，包括是否开启上传图片，上传图片的数量和上传方式。注意：这个配置只有使用支持多模态的模型时才会生效。
 
     ### Query
 
     <Properties>
       <Property name='user' type='string' key='user'>
-        The user identifier, defined by the developer, must ensure uniqueness within the app.
+        用户标识，由开发者定义规则，需保证用户标识在应用内唯一。
       </Property>
     </Properties>
   </Col>
   <Col sticky>
 
-    <CodeGroup title="Request" tag="GET" label="/parameters" targetCode={` curl --location --request GET '${props.appDetail.api_base_url}/parameters?user=abc-123'`}>
+    <CodeGroup title="Request" tag="GET" label="/parameters" targetCode={` curl --location --request GET '${props.appDetail.api_base_url}/parameters'\\\n--header 'Authorization: Bearer ENTER-YOUR-SECRET-KEY'`}>
 
     ```bash {{ title: 'cURL' }}
     curl --location --request GET '${props.appDetail.api_base_url}/parameters?user=abc-123' \
