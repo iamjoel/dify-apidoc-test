@@ -153,19 +153,20 @@ pre {
   background: none;
 }
 
-.codeBlockContainer_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-Container-styles-module {
+[class*=codeBlockContainer_] {
   margin-bottom: 0 !important;
 }
-.codeBlockContainer_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-Container-styles-module,
-.codeBlock_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-Content-styles-module{
+
+[class*=codeBlockContainer_],
+[class*=codeBlock_] {
   background: none !important;
 }
 
-.codeBlockLines_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-Content-styles-module {
+[class*=codeBlockLines_] {
   padding-bottom: 0 !important;
 }
 
-.codeBlock_node_modules-\@docusaurus-theme-classic-lib-theme-CodeBlock-Content-styles-module .token {
+[class*=codeBlockLines_] .token {
   color: #fff !important;
 }
 /* duplicate copy btn */
